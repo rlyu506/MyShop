@@ -1,0 +1,26 @@
+@RequestMapping(value = "/{productId}/edit", method = RequestMethod.GET)
+	public String update(@PathVariable int productId, HttpServletRequest request, Model model) {
+		System.out.println(productId);
+		Product product = productDaoImp.findById(productId);
+		// Integer pid = Integer.valueOf(request.getParameter("pid"));
+		// String pname = request.getParameter("pname");
+		// Double price = Double.valueOf(request.getParameter("price"));
+		// String pdesc = request.getParameter("pdesc");
+		// Integer is_hot = Integer.valueOf(request.getParameter("is_hot"));
+		// Date pdate = Date.valueOf(request.getParameter("pdate"));
+		// Product newProduct = new Product(pid, pname, price, pdesc,
+		// is_hot,pdate);
+		model.addAttribute("product", product);
+		return "editProduct";
+	}
+
+	@RequestMapping(value = "/updated", method = RequestMethod.POST)
+	public String productUpdated(@Valid @ModelAttribute("product") Product product, Model model) {
+		System.out.println(product);
+		productDaoImp.update(product);
+		List<Product> plist = productDaoImp.getProducts();
+		model.addAttribute("plist", plist);
+		List<Category> categories = categoryService.getCurrent();
+		model.addAttribute("categories", categories);
+		return "products";
+	}
